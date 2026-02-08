@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Confession for Andine</title>
+    <style>
+        /* CSS sama seperti sebelumnya, tidak diubah */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffe6f2;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.5s ease;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        button {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ff1493;
+        }
+        button:focus {
+            outline: 2px solid #ff1493;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px;
+            max-width: 90%;
+        }
+        input:focus {
+            outline: 2px solid #ff69b4;
+        }
+        .options {
+            margin: 20px;
+        }
+        .option {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option.selected {
+            background-color: #ff69b4;
+            color: white;
+        }
+        .option:focus {
+            outline: 2px solid #ff69b4;
+        }
+        .letter {
+            background-color: #fff;
+            border: 2px solid #ff69b4;
+            padding: 20px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 300px;
+            cursor: pointer;
+            position: relative;
+            transition: box-shadow 0.3s;
+        }
+        .letter:hover {
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .reveal {
+            display: none;
+            margin-top: 20px;
+        }
+        .love {
+            font-size: 48px;
+            color: #ff1493;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .back-button {
+            background-color: #ccc;
+            color: #333;
+        }
+        .back-button:hover {
+            background-color: #aaa;
+        }
+        iframe {
+            display: none;
+            width: 300px;
+            height: 200px;
+            border: none;
+            margin: 20px auto;
+        }
+        @media (max-width: 600px) {
+            .letter {
+                width: 95%;
+            }
+            button, input {
+                width: 80%;
+            }
+            iframe {
+                width: 90%;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="page1" class="page active">
+        <h1>Hai Andine!</h1>
+        <button onclick="nextPage(2)" aria-label="Mulai confession">Start</button>
+    </div>
+
+    <div id="page2" class="page">
+        <h2>Perasaan mu ke aku 1-100 berapa sih?</h2>
+        <input type="number" id="feeling" min="1" max="100" placeholder="Masukkan angka 1-100" aria-label="Input perasaan">
+        <button onclick="checkFeeling()" aria-label="Lanjut ke halaman berikutnya">Lanjut</button>
+        <button class="back-button" onclick="nextPage(1)" aria-label="Kembali ke halaman sebelumnya">Kembali</button>
+    </div>
+
+    <div id="page3" class="page">
+        <h2>Kamu kalau aku tembak mau atau tidak?</h2>
+        <div class="options">
+            <div class="option" id="iya" onclick="selectOption('iya')" tabindex="0" onkeydown="handleKey(event, 'iya')" aria-label="Pilih Iya">Iya</div>
+            <div class="option" id="tidak" onclick="selectOption('tidak')" tabindex="0" onkeydown="handleKey(event, 'tidak')" aria-label="Pilih Tidak">Tidak</div>
+        </div>
+        <button id="lanjutkan" style="display:none;" onclick="nextPage(4)" aria-label="Lanjutkan ke halaman berikutnya">Lanjutkan</button>
+        <button class="back-button" onclick="nextPage(2)" aria-label="Kembali ke halaman sebelumnya">Kembali</button>
+    </div>
+
+    <div id="page4" class="page">
+        <div class="letter" onclick="revealLetter()" tabindex="0" onkeydown="handleKey(event, 'reveal')" aria-label="Klik untuk membuka surat">
+            <p>Click di sini</p>
+            <div class="reveal" id="revealText">I will keep trying, because I like you</div>
+        </div>
+        <div class="love" id="loveText" style="display:none;">I Love You</div>
+        <button id="lanjutkanLove" style="display:none;" onclick="nextPage(5)" aria-label="Lanjutkan ke halaman berikutnya">Lanjutkan</button>
+        <button class="back-button" onclick="nextPage(3)" aria-label="Kembali ke halaman sebelumnya">Kembali</button>
+    </div>
+
+    <div id="page5" class="page">
+        <h2>Semangat ya sekolanya kamu tuh random banget kalau di sekolah</h2>
+        <button onclick="nextPage(6)" aria-label="Lanjut ke halaman berikutnya">Lanjut</button>
+        <button class="back-button" onclick="nextPage(4)" aria-label="Kembali ke halaman sebelumnya">Kembali</button>
+    </div>
+
+    <div id="page6" class="page">
+        <h2>Aku suka kok ke randoman mu, jangan gampang insecure ya karena semua itu sempurna</h2>
+        <button onclick="nextPage(7)" aria-label="Lanjut ke halaman berikutnya">Lanjut</button>
+        <button class="back-button" onclick="nextPage(5)" aria-label="Kembali ke halaman sebelumnya">Kembali</button>
+    </div>
+
+    <div id="page7" class="page">
+        <h2>Kamu tuh kayak lagu Sempurna tau nggak sih, hmm coba deh cari di Spotify itu ngambarin kamu banget loh</h2>
+        <iframe id="song" src="https://www.youtube.com/embed/VIDEO_ID?autoplay=0" allowfullscreen></iframe> <!-- Ganti VIDEO_ID dengan ID video YouTube lagu "Seandainya" Vierra -->
+        <button onclick="playSong()" aria-label="Putar lagu Seandainya dari Vierra">Putar Lagu Seandainya</button>
+        <button onclick="endConfession()" aria-label="Selesai confession">Selesai</button>
+        <button class="back-button" onclick="nextPage(6)" aria-label="Kembali ke halaman sebelumnya">Kembali</button>
+    </div>
+
+    <script>
+        function nextPage(pageNum) {
+            console.log('nextPage called with pageNum:', pageNum); // Debugging log
+            try {
+                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                const targetPage = document.getElementById('page' + pageNum);
+                if (targetPage) {
+                    targetPage.classList.add('active');
+                    console.log('Switched to page:', pageNum); // Success log
+                } else {
+                    console.error('Page ' + pageNum + ' not found');
+                    alert('Halaman tidak ditemukan!'); // Fallback alert
+                }
+            } catch (e) {
+                console.error('Error in nextPage:', e);
+                alert('Terjadi kesalahan! Periksa console untuk detail.'); // Fallback alert
+            }
+        }
+
+        function checkFeeling() {
+            try {
+                const feelingInput = document.getElementById('feeling');
+                const feeling = parseInt(feelingInput.value);
+                if (isNaN(feeling) || feeling < 1 || feeling > 100) {
+                    alert('Masukkan angka antara 1-100 ya!');
+                    feelingInput.focus();
+                } else if (feeling < 50) {
+                    alert('Hmm, kurang nih. Tapi aku tetap lanjut ya?');
+                    nextPage(3);
+                } else {
+                    nextPage(3);
+                }
+            } catch (e) {
+                console.error('Error in checkFeeling:', e);
+            }
+        }
+
+        function selectOption(choice) {
+            try {
+                document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                document.getElementById(choice).classList.add('selected');
+                if (choice === 'iya') {
+                    document.getElementById('lanjutkan').style.display = 'inline-block';
+                } else if (choice === 'tidak') {
+                    alert('Haha, aku tahu kamu bohong! Lanjut ya?');
+                    document.getElementById('lanjutkan').style.display = 'inline-block';
+                }
+            } catch (e) {
+                console.error('Error in selectOption:', e);
+            }
+        }
+
+        function handleKey(event, action) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                if (action === 'iya' || action === 'tidak') {
+                    selectOption(action);
+                } else if (action === 'reveal') {
+                    revealLetter();
+                }
+            }
+        }
+
+        function revealLetter() {
+            try {
+                document.getElementById('revealText').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('loveText').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('lanjutkanLove').style.display = 'inline-block';
+                    }, 500);
+                }, 2000);
+            } catch (e) {
+                console.error('Error in revealLetter:', e);
+            }
+        }
+
+        function playSong() {
+            try {
+                const iframe = document.getElementById('song');
+                iframe.style.display = 'block';
+                iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+            } catch (e) {
+                console.error('Error in playSong:', e);
+            }
+        }
+
+        function endConfession() {
+            try {
+                alert('Terima kasih sudah membaca! Semoga harimu indah, Andine. 💕');
+                location.reload();
+            } catch (e) {
+                console.error('Error in endConfession:', e);
+            }
+        }
+    </script>
+</body>
+</html>
